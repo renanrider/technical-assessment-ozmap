@@ -8,7 +8,11 @@ import {
   UserController,
   UserRequest,
 } from '@/presentation/controllers/user-controller';
-import { serverError } from '@/presentation/helpers/http-status-code';
+import {
+  badRequest,
+  serverError,
+} from '@/presentation/helpers/http-status-code';
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error';
 
 const mockRequest = (): UserRequest => ({
   name: faker.person.firstName(),
@@ -52,5 +56,18 @@ describe('UserController', () => {
     const httpResponse = await sut.handle(request);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  test('Should return 400 if name is not provided', async () => {
+    const { sut } = makeSut();
+    const request = {
+      name: '',
+      email: faker.internet.email(),
+      address: faker.location.streetAddress(),
+      coordinates: [faker.location.latitude(), faker.location.longitude()],
+    };
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('name')));
   });
 });
