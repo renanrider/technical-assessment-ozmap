@@ -108,4 +108,12 @@ describe('UserController', () => {
     const httpResponse = await sut.handle(request);
     expect(httpResponse.statusCode).toBe(400);
   });
+
+  test('Should return 200 with valid values', async () => {
+    const { sut } = makeSut();
+    const request = mockRequest();
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual(request);
+  });
 });
