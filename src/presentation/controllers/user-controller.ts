@@ -32,6 +32,10 @@ export class UserController implements Controller {
       return badRequest(new InvalidParamError('only address or coordinates'));
     }
 
+    if (!address && !coordinates) {
+      return badRequest(new InvalidParamError('add address or coordinates'));
+    }
+
     try {
       const user = await this.addUser.add(request);
       if (!user) {
