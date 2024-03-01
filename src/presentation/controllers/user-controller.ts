@@ -16,7 +16,7 @@ export class UserController implements Controller {
 
   async handle(request: UserRequest): Promise<HttpResponse> {
     const requiredParams = ['name', 'email'];
-    const { name } = request;
+    const { name, email } = request;
     for (const param of requiredParams) {
       if (!Object.keys(request).includes(param)) {
         return badRequest(new InvalidParamError(param));
@@ -24,6 +24,8 @@ export class UserController implements Controller {
     }
 
     if (!name) return badRequest(new InvalidParamError('name'));
+
+    if (!email) return badRequest(new InvalidParamError('email'));
 
     try {
       const user = await this.addUser.add(request);
