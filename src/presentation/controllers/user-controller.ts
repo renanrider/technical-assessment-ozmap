@@ -16,7 +16,8 @@ export class UserController implements Controller {
 
   async handle(request: UserRequest): Promise<HttpResponse> {
     const requiredParams = ['name', 'email'];
-    const { name, email } = request;
+    const { name, email, address, coordinates } = request;
+
     for (const param of requiredParams) {
       if (!Object.keys(request).includes(param)) {
         return badRequest(new InvalidParamError(param));
@@ -26,6 +27,10 @@ export class UserController implements Controller {
     if (!name) return badRequest(new InvalidParamError('name'));
 
     if (!email) return badRequest(new InvalidParamError('email'));
+
+    if (address && coordinates) {
+      return badRequest(new InvalidParamError('only address or coordinates'));
+    }
 
     try {
       const user = await this.addUser.add(request);
