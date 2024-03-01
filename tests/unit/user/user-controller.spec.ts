@@ -98,4 +98,14 @@ describe('UserController', () => {
       badRequest(new InvalidParamError('only address or coordinates')),
     );
   });
+
+  test('should return 400 if neither address nor coordinates are provided', async () => {
+    const { sut } = makeSut();
+    const request = {
+      name: faker.person.firstName(),
+      email: faker.internet.email(),
+    };
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(400);
+  });
 });
