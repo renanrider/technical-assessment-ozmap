@@ -70,4 +70,17 @@ describe('UserController', () => {
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('name')));
   });
+
+  test('Should return 400 if email is not provided', async () => {
+    const { sut } = makeSut();
+    const request = {
+      name: faker.person.firstName(),
+      email: '',
+      address: faker.location.streetAddress(),
+      coordinates: [faker.location.latitude(), faker.location.longitude()],
+    };
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
+  });
 });
