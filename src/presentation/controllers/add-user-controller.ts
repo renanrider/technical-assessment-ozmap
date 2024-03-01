@@ -11,7 +11,7 @@ export type UserRequest = {
   coordinates?: number[];
 };
 
-export class UserController implements Controller {
+export class AddUserController implements Controller {
   constructor(private readonly addUser: AddUser) {}
 
   async handle(request: UserRequest): Promise<HttpResponse> {
