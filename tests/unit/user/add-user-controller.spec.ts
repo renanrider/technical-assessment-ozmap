@@ -5,9 +5,9 @@ import {
   AddUserResult,
 } from '@/domain/usecases/user/add-user';
 import {
-  UserController,
+  AddUserController,
   UserRequest,
-} from '@/presentation/controllers/user-controller';
+} from '@/presentation/controllers/add-user-controller';
 import {
   badRequest,
   serverError,
@@ -35,13 +35,13 @@ export class AddUserSpy implements AddUser {
 }
 
 interface SutTypes {
-  sut: UserController;
+  sut: AddUserController;
   addUserSpy: AddUserSpy;
 }
 
 const makeSut = (): SutTypes => {
   const addUserSpy = new AddUserSpy(mockRequest());
-  const sut = new UserController(addUserSpy);
+  const sut = new AddUserController(addUserSpy);
   return {
     sut,
     addUserSpy,
