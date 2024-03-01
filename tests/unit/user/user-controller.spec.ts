@@ -83,4 +83,19 @@ describe('UserController', () => {
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
   });
+
+  test('should return 400 if both address and coordinates are provided', async () => {
+    const { sut } = makeSut();
+    const request = {
+      name: faker.person.firstName(),
+      email: faker.internet.email(),
+      address: faker.location.streetAddress(),
+      coordinates: [faker.location.latitude(), faker.location.longitude()],
+    };
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(
+      badRequest(new InvalidParamError('only address or coordinates')),
+    );
+  });
 });
