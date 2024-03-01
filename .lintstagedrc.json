@@ -2,6 +2,6 @@
   "*.{ts,tsx}": [
     "eslint --fix",
     "prettier --config .prettierrc ./src/**/*.ts --write",
-    "git add ."
+    "git add"
   ]
 }
