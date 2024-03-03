@@ -1,6 +1,7 @@
 import {
   badRequest,
   forbidden,
+  ok,
   serverError,
 } from '@/presentation/helpers/http-status-code';
 import {
@@ -52,14 +53,12 @@ const makeSut = (): SutTypes => {
 };
 
 describe('GetUserController', () => {
-  it('return 500 if get user fails', async () => {
+  it('return 500 if get user throw server error', async () => {
     const { sut, getUserSpy } = makeSut();
     jest.spyOn(getUserSpy, 'get').mockRejectedValueOnce(new Error());
     const request = mockRequest();
     const httpResponse = await sut.handle(request);
     expect(httpResponse).toEqual(serverError(new Error()));
-    console.log(httpResponse);
-    expect(httpResponse.statusCode).toBe(500);
   });
 
   it('return 400 if userId is not provided', async () => {
@@ -68,7 +67,6 @@ describe('GetUserController', () => {
       userId: '',
     };
     const httpResponse = await sut.handle(request);
-    expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
   });
 
@@ -86,7 +84,6 @@ describe('GetUserController', () => {
     const { sut } = makeSut();
     const request = mockRequest();
     const httpResponse = await sut.handle(request);
-    expect(httpResponse.statusCode).toBe(200);
-    expect(httpResponse.body).toEqual(mockResponse());
+    expect(httpResponse).toEqual(ok(mockResponse()));
   });
 });
