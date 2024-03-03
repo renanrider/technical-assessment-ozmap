@@ -1,10 +1,14 @@
-import { serverError } from '@/presentation/helpers/http-status-code';
+import {
+  badRequest,
+  serverError,
+} from '@/presentation/helpers/http-status-code';
 import {
   GetUser,
   GetUserParams,
   GetUserResult,
 } from '@/domain/usecases/user/get-user';
 import { GetUserController } from '@/presentation/controllers/get-user-controller';
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error';
 
 const mockRequest = (): GetUserParams => ({
   userId: '1',
@@ -54,5 +58,15 @@ describe('GetUserController', () => {
     const httpResponse = await sut.handle(request);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  test('Should return 400 if userId is not provided', async () => {
+    const { sut } = makeSut();
+    const request = {
+      userId: '',
+    };
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
   });
 });
