@@ -7,7 +7,7 @@ import {
   GetUserParams,
   GetUserResult,
 } from '@/domain/usecases/user/get-user';
-import { GetUserController } from '@/presentation/controllers/get-user-controller';
+import { GetUserController } from '@/presentation/controllers';
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error';
 
 const mockRequest = (): GetUserParams => ({
