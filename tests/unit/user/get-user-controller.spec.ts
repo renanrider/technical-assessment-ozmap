@@ -69,4 +69,12 @@ describe('GetUserController', () => {
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
   });
+
+  test('Should return 200 with valid userId', async () => {
+    const { sut } = makeSut();
+    const request = mockRequest();
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual(mockResponse());
+  });
 });
