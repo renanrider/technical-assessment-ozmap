@@ -1,4 +1,7 @@
-import { serverError } from '@/presentation/helpers/http-status-code';
+import {
+  forbidden,
+  serverError,
+} from '@/presentation/helpers/http-status-code';
 import {
   GetAllUsers,
   GetAllUsersResult,
@@ -50,5 +53,12 @@ describe('GetAllUsersController', () => {
     jest.spyOn(getAllUsersSpy, 'get').mockRejectedValueOnce(new Error());
     const httpResponse = await sut.handle();
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('return 404 if get users fails', async () => {
+    const { sut, getAllUsersSpy } = makeSut();
+    jest.spyOn(getAllUsersSpy, 'get').mockResolvedValueOnce(null);
+    const httpResponse = await sut.handle();
+    expect(httpResponse).toEqual(forbidden(new Error('there are no user')));
   });
 });
