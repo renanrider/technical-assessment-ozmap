@@ -67,4 +67,11 @@ describe('RemoveUserController', () => {
     const httpResponse = await sut.handle(request);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
   });
+
+  it('return 200 if user removed', async () => {
+    const { sut } = makeSut();
+    const request = mockRequest();
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse).toEqual(ok(mockResponse()));
+  });
 });
