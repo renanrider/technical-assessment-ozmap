@@ -1,5 +1,6 @@
 import {
   forbidden,
+  ok,
   serverError,
 } from '@/presentation/helpers/http-status-code';
 import {
@@ -60,5 +61,11 @@ describe('GetAllUsersController', () => {
     jest.spyOn(getAllUsersSpy, 'get').mockResolvedValueOnce(null);
     const httpResponse = await sut.handle();
     expect(httpResponse).toEqual(forbidden(new Error('there are no user')));
+  });
+
+  it('return 200 if users are found', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle();
+    expect(httpResponse).toEqual(ok(mockResponse()));
   });
 });
