@@ -1,5 +1,6 @@
 import {
   badRequest,
+  forbidden,
   serverError,
 } from '@/presentation/helpers/http-status-code';
 import {
@@ -22,7 +23,7 @@ const mockResponse = (): GetUserResult => ({
   coordinates: [0, 0],
 });
 
-export class GetUserSpy implements GetUser {
+class GetUserSpy implements GetUser {
   getUserParams: GetUserParams;
 
   constructor(getUserParams: GetUserParams) {
@@ -51,16 +52,17 @@ const makeSut = (): SutTypes => {
 };
 
 describe('GetUserController', () => {
-  test('Should return 500 if get user fails', async () => {
+  it('return 500 if get user fails', async () => {
     const { sut, getUserSpy } = makeSut();
     jest.spyOn(getUserSpy, 'get').mockRejectedValueOnce(new Error());
     const request = mockRequest();
     const httpResponse = await sut.handle(request);
-    expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse).toEqual(serverError(new Error()));
+    console.log(httpResponse);
+    expect(httpResponse.statusCode).toBe(500);
   });
 
-  test('Should return 400 if userId is not provided', async () => {
+  it('return 400 if userId is not provided', async () => {
     const { sut } = makeSut();
     const request = {
       userId: '',
@@ -70,7 +72,17 @@ describe('GetUserController', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
   });
 
-  test('Should return 200 with valid userId', async () => {
+  it('return 404 if get user fails', async () => {
+    const { sut, getUserSpy } = makeSut();
+    const request = {
+      userId: 'invalid_user_id',
+    };
+    jest.spyOn(getUserSpy, 'get').mockResolvedValueOnce(null);
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse).toEqual(forbidden(new Error('user not found')));
+  });
+
+  it('return 200 with valid userId', async () => {
     const { sut } = makeSut();
     const request = mockRequest();
     const httpResponse = await sut.handle(request);
