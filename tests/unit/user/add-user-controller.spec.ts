@@ -20,7 +20,7 @@ const mockRequest = (): UserRequest => ({
   address: faker.location.streetAddress(),
 });
 
-export class AddUserSpy implements AddUser {
+class AddUserSpy implements AddUser {
   addUserParams: AddUserParams;
 
   constructor(addUserParams: AddUserParams) {
@@ -48,8 +48,8 @@ const makeSut = (): SutTypes => {
   };
 };
 
-describe('UserController', () => {
-  test('Should return 500 if add user fails', async () => {
+describe('AddUserController', () => {
+  it('return 500 if add user fails', async () => {
     const { sut, addUserSpy } = makeSut();
     jest.spyOn(addUserSpy, 'add').mockRejectedValueOnce(new Error());
     const request = mockRequest();
@@ -58,7 +58,7 @@ describe('UserController', () => {
     expect(httpResponse).toEqual(serverError(new Error()));
   });
 
-  test('Should return 400 if name is not provided', async () => {
+  it('return 400 if name is not provided', async () => {
     const { sut } = makeSut();
     const request = {
       name: '',
@@ -71,7 +71,7 @@ describe('UserController', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('name')));
   });
 
-  test('Should return 400 if email is not provided', async () => {
+  it('return 400 if email is not provided', async () => {
     const { sut } = makeSut();
     const request = {
       name: faker.person.firstName(),
@@ -84,7 +84,7 @@ describe('UserController', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
   });
 
-  test('should return 400 if both address and coordinates are provided', async () => {
+  it('return 400 if both address and coordinates are provided', async () => {
     const { sut } = makeSut();
     const request = {
       name: faker.person.firstName(),
@@ -99,7 +99,7 @@ describe('UserController', () => {
     );
   });
 
-  test('should return 400 if neither address nor coordinates are provided', async () => {
+  it('return 400 if neither address nor coordinates are provided', async () => {
     const { sut } = makeSut();
     const request = {
       name: faker.person.firstName(),
@@ -109,7 +109,7 @@ describe('UserController', () => {
     expect(httpResponse.statusCode).toBe(400);
   });
 
-  test('Should return 200 with valid values', async () => {
+  it('return 200 with valid values', async () => {
     const { sut } = makeSut();
     const request = mockRequest();
     const httpResponse = await sut.handle(request);
