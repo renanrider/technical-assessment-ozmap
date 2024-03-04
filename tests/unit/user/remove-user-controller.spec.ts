@@ -1,5 +1,6 @@
 import {
   badRequest,
+  ok,
   serverError,
 } from '@/presentation/helpers/http-status-code';
 import {
@@ -8,7 +9,7 @@ import {
   RemoveUserResult,
 } from '@/domain/usecases/user/remove-user';
 import { RemoveUserController } from '@/presentation/controllers';
-import { InvalidParamError } from '../../presentation/errors/invalid-param-error';
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error';
 
 const mockRequest = (): RemoveUserParams => ({
   userId: '1',
@@ -66,5 +67,12 @@ describe('RemoveUserController', () => {
     };
     const httpResponse = await sut.handle(request);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('userId')));
+  });
+
+  it('return 200 if user removed', async () => {
+    const { sut } = makeSut();
+    const request = mockRequest();
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse).toEqual(ok(mockResponse()));
   });
 });
