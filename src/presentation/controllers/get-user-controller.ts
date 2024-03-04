@@ -1,6 +1,11 @@
 import { GetUser } from '@/domain/usecases/user/get-user';
 import { Controller, HttpResponse } from '../protocols';
-import { badRequest, ok, serverError } from '../helpers/http-status-code';
+import {
+  badRequest,
+  forbidden,
+  ok,
+  serverError,
+} from '../helpers/http-status-code';
 import { InvalidParamError } from '../errors/invalid-param-error';
 
 export type GetUserRequest = {
@@ -15,6 +20,10 @@ export class GetUserController implements Controller {
 
     try {
       const user = await this.getUser.get(request);
+
+      if (!user) {
+        return forbidden(new Error('user not found'));
+      }
 
       return ok(user);
     } catch (error) {
