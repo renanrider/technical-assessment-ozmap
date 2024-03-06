@@ -38,4 +38,12 @@ describe('DbAddUser usecase', () => {
     const promise = await sut.add(mockRequest());
     expect(promise).toBeNull();
   });
+
+  it('call UserRepository with correct params', async () => {
+    const { sut, dbAddUserSpy } = makeSut();
+    jest.spyOn(dbAddUserSpy, 'create');
+
+    await sut.add(mockRequest());
+    expect(dbAddUserSpy.create).toHaveBeenCalledWith(mockRequest());
+  });
 });
