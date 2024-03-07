@@ -48,4 +48,12 @@ describe('DbGetUser usecase', () => {
     const promise = await sut.get(mockRequest());
     expect(promise).toBeNull();
   });
+
+  it('call UserRepository with correct params', async () => {
+    const { sut, dbGetUserSpy } = makeSut();
+    jest.spyOn(dbGetUserSpy, 'findById');
+
+    await sut.get(mockRequest());
+    expect(dbGetUserSpy.findById).toHaveBeenCalledWith(mockRequest());
+  });
 });
