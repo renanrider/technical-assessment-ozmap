@@ -49,4 +49,12 @@ describe('DbGetAllUsers usecase', () => {
     const promise = await sut.get();
     expect(promise).toBeNull();
   });
+
+  it('return all users', async () => {
+    const { sut, dbGetAllUsersSpy } = makeSut();
+    jest.spyOn(dbGetAllUsersSpy, 'findAll');
+    const users = await sut.get();
+
+    expect(users).toEqual(mockResponse());
+  });
 });
