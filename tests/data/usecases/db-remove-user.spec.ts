@@ -54,4 +54,14 @@ describe('DbRemoveUser usecase', () => {
     const result = await sut.remove(mockRequest());
     expect(result).toBeNull();
   });
+
+  it('call with correct values', async () => {
+    const { sut, dbRemoveUserRepositorySpy } = makeSut();
+    jest.spyOn(dbRemoveUserRepositorySpy, 'remove');
+
+    await sut.remove(mockRequest());
+    expect(dbRemoveUserRepositorySpy.remove).toHaveBeenCalledWith(
+      mockRequest(),
+    );
+  });
 });
