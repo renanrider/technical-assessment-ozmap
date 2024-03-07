@@ -64,4 +64,12 @@ describe('DbRemoveUser usecase', () => {
       mockRequest(),
     );
   });
+
+  it('remove a user', async () => {
+    const { sut, dbRemoveUserRepositorySpy } = makeSut();
+    jest.spyOn(dbRemoveUserRepositorySpy, 'remove');
+
+    const user = await sut.remove(mockRequest());
+    expect(user).toEqual(mockResponse());
+  });
 });
