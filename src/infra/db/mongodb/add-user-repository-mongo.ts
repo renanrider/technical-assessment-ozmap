@@ -4,7 +4,6 @@ import UserModel from './models/UserModel';
 
 export class AddUserRepositoryMongo implements AddUserRepository {
   async create(user: User): Promise<User> {
-    const createdUser = await UserModel.create(user);
-    return createdUser.toObject();
+    return await UserModel.create(user);
   }
 }
