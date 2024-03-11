@@ -1,9 +1,8 @@
-import express from 'express';
+import express, { Express } from 'express';
+import setupMiddlewares from './middlewares';
 
-export const app = express();
-
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World!');
-});
-
-app.use(express.json());
+export const setupApp = async (): Promise<Express> => {
+  const app = express();
+  setupMiddlewares(app);
+  return app;
+};
