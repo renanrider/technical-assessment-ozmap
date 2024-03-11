@@ -1,9 +1,11 @@
 import {
   AddUserRepositoryMongo,
   GetAllUsersRepositoryMongo,
+  GetUserRepositoryMongo,
 } from '@/infra/db/mongodb';
 import { MongoHelper } from '@/infra/db/mongodb/mongo-helper';
 import { User } from '../../../domain/models';
+import { GetUserParams } from '@/data/protocols/db/user';
 
 const userMock: User = {
   name: 'any_name',
@@ -77,5 +79,24 @@ describe('AddUserRepositoryMongo', () => {
 
     expect(users).toBeTruthy();
     expect(users).toHaveLength(0);
+  });
+
+  it('return user when GetUserRepositoryMongo.findById', async () => {
+    const addUserRepositoryMongo = new AddUserRepositoryMongo();
+    const userToBeFound = await addUserRepositoryMongo.create(usersMock[0]);
+    await addUserRepositoryMongo.create(usersMock[1]);
+    await addUserRepositoryMongo.create(usersMock[2]);
+
+    const sut = new GetUserRepositoryMongo();
+
+    const getUserParams: GetUserParams = {
+      userId: userToBeFound.id!,
+    };
+
+    const user = await sut.findById(getUserParams);
+
+    expect(user).toBeTruthy();
+    expect(user?.name).toBe(usersMock[0].name);
+    expect(user?.email).toBe(usersMock[0].email);
   });
 });
