@@ -70,4 +70,12 @@ describe('AddUserRepositoryMongo', () => {
     expect(users![0].email).toBe(usersMock[0].email);
     expect(users![0].address).toBe(usersMock[0].address);
   });
+
+  it('return null when GetAllUsersRepository.findAll is empty', async () => {
+    const sut = new GetAllUsersRepositoryMongo();
+    const users = await sut.findAll();
+
+    expect(users).toBeTruthy();
+    expect(users).toHaveLength(0);
+  });
 });
