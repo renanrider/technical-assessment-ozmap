@@ -5,7 +5,8 @@ import {
 } from '@/infra/db/mongodb';
 import { MongoHelper } from '@/infra/db/mongodb/mongo-helper';
 import { User } from '../../../domain/models';
-import { GetUserParams } from '@/data/protocols/db/user';
+import { GetUserParams, RemoveUserParams } from '@/data/protocols/db/user';
+import { RemoveUserRepositoryMongo } from './../../../../src/infra/db/mongodb/remove-user-repository-mongo';
 
 const userMock: User = {
   name: 'any_name',
@@ -98,5 +99,28 @@ describe('AddUserRepositoryMongo', () => {
     expect(user).toBeTruthy();
     expect(user?.name).toBe(usersMock[0].name);
     expect(user?.email).toBe(usersMock[0].email);
+  });
+
+  it('return user when RemoveUserRepositoryMongo.remove', async () => {
+    const sut = new GetUserRepositoryMongo();
+    const addUserRepositoryMongo = new AddUserRepositoryMongo();
+    const removeUserRepositoryMongo = new RemoveUserRepositoryMongo();
+
+    const userToBeFound = await addUserRepositoryMongo.create(usersMock[0]);
+
+    const getUserParams: GetUserParams = {
+      userId: userToBeFound.id!,
+    };
+
+    const foundUser = await sut.findById(getUserParams);
+    const removeUserParams: RemoveUserParams = {
+      userId: foundUser!.id!,
+    };
+    const userRemoved =
+      await removeUserRepositoryMongo.remove(removeUserParams);
+
+    expect(userRemoved).toBeTruthy();
+    expect(userRemoved?.name).toBe(foundUser!.name);
+    expect(userRemoved?.email).toBe(foundUser!.email);
   });
 });
